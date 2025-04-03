@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import exc
 from database import get_db
-from models import Borrow, Return
+from models import Borrow, Return, Book
 from schemas import BorrowCreate, ReturnCreate
 
 router = APIRouter()
@@ -11,6 +11,9 @@ MAX_BORROW_COUNT = 3
 
 @router.post("/borrow/", response_model=BorrowCreate)
 async def create_genre(borrow: BorrowCreate, db: Session = Depends(get_db)):
+    book = db.query(Book).filter(Book.id == borrow.book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Book not found")
 
     same_book_borrow = db.query(Borrow).filter(Borrow.book_id == borrow.book_id).first()
 
@@ -42,7 +45,7 @@ async def create_genre(returnBook: ReturnCreate, db: Session = Depends(get_db)):
     borrow = db.query(Borrow).filter(Borrow.user_id == returnBook.user_id and Borrow.book_id == returnBook.book_id).first()
 
     if not borrow:
-        raise HTTPException(status_code=400, detail="Borrow with for this book and user not found")
+        raise HTTPException(status_code=404, detail="Borrow with for this book and user not found")
 
     new_return = Return(book_id = returnBook.book_id, user_id = returnBook.user_id)
 
