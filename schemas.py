@@ -12,8 +12,9 @@ class GenreCreate(GenreBase):
 
 class GenreResponse(GenreBase):
     id: int
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }
 
 # Author Schemas
 class AuthorBase(BaseModel):
@@ -59,8 +60,10 @@ class BookResponse(BookBase):
     id: int
     author: AuthorBase
     genres: List[GenreResponse] = []
-    class Config:
-        from_attributes = True
+
+    model_config = {
+        "from_attributes": True
+    }
 
 # Borrow Schemas
 class BorrowBase(BaseModel):
@@ -74,8 +77,10 @@ class BorrowCreate(BorrowBase):
 class BorrowResponse(BorrowBase):
     id: int
     created_at: datetime
-    class Config:
-        from_attributes = True
+
+    model_config = {
+        "from_attributes": True
+    }
 
 # Return Schemas
 class ReturnBase(BaseModel):
@@ -88,8 +93,10 @@ class ReturnCreate(ReturnBase):
 class ReturnResponse(ReturnBase):
     id: int
     created_at: datetime
-    class Config:
-        from_attributes = True
+
+    model_config = {
+        "from_attributes": True
+    }
 
 # Publisher Schemas
 class PublisherBase(BaseModel):

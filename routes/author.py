@@ -35,7 +35,6 @@ def create_author(
         db.refresh(new_author)
     except exc.SQLAlchemyError as e:
         db.rollback()
-        print(e._message())
         raise HTTPException(status_code=500, detail="Failed to create book")
 
     return new_author
